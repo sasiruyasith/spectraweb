@@ -274,5 +274,3 @@ spectrawe/
 ## Notes
 
 The spectrum plot is generated from the saved peak frequency, peak power and noise floor values. The app stores scan summaries, not raw sweep data.
-
-AI assistance (Claude) was used during development, which the module allows.
