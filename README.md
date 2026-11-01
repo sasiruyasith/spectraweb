@@ -78,7 +78,7 @@ New accounts start as **analyst**. An admin can change roles on the Users page.
 ### 1. Clone
 
 ```bash
-git clone https://github.com/<your-username>/spectraweb.git
+git clone https://github.com/sasiruyasith/spectraweb.git
 cd spectraweb
 ```
 
