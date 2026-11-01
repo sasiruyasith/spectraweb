@@ -1,146 +1,121 @@
-<p align="center">
-  <img src="docs/logo.svg" width="90" alt="SpectraWeb logo">
-</p>
+# SpectraWeb - RF Spectrum Scan Management System
 
-<h1 align="center">SpectraWeb</h1>
+SpectraWeb is a web application for recording and managing RF spectrum analyzer measurements. For each sweep it stores the frequency range, peak signal, noise floor, the device that was used and where the scan was taken, so that measurements can be searched and compared later instead of being lost in notebooks or screenshots. Each scan also has a details page with a spectrum plot showing the peak.
 
-<p align="center">
-  <b>RF spectrum scan manager</b><br>
-  Log, search and review spectrum analyzer measurements from the lab or the field.
-</p>
+![SpectraWeb](docs/screenshots/landing.png)
 
-<p align="center">
-  <img src="https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white" alt="React">
-  <img src="https://img.shields.io/badge/Vite-5-646CFF?logo=vite&logoColor=white" alt="Vite">
-  <img src="https://img.shields.io/badge/Express-4-000000?logo=express&logoColor=white" alt="Express">
-  <img src="https://img.shields.io/badge/MySQL-8-4479A1?logo=mysql&logoColor=white" alt="MySQL">
-  <img src="https://img.shields.io/badge/Auth-JWT-orange" alt="JWT">
-</p>
+## Prerequisites
 
-![SpectraWeb landing page](docs/screenshots/landing.png)
+Before running the project make sure you have the following installed:
 
----
+- Node.js (v18 or newer)
+- MySQL Server 8 (MySQL Workbench is optional)
+- Git
 
-## About
+## Setup Instructions
 
-SpectraWeb is a web app for keeping a record of **RF spectrum analyzer scans**. For each scan you can store:
-
-- the frequency range (start and stop), the peak frequency and peak power
-- the noise floor
-- the band (HF / VHF / UHF / SHF)
-- the device that took it, the location and the time
-
-Every scan has a details page with a **spectrum plot** that marks the peak.
-
-Built for the **EE4207 Web Application Development** mini project.
-
-## Features
-
-| | Feature |
-|---|---|
-| ➕ | **Create**: add scans, devices and user accounts through forms |
-| 📋 | **Read**: dashboard with stats, scan list, scan details with spectrum plot |
-| 🔎 | **Search / filter / sort**: keyword search, filter by band or device, sort by date, power, frequency or title |
-| ✏️ | **Update**: edit scans and devices, and change user roles |
-| 🗑️ | **Delete**: a confirmation popup comes up first. Devices that still have scans can't be deleted (FK `RESTRICT`) |
-| ✅ | **Validation**: client side (React) and server side (Express middleware) with clear error messages |
-| 🔐 | **Auth & roles**: JWT login and bcrypt password hashing, with **admin / analyst / viewer** roles |
-| 📱 | **Responsive**: hamburger menu, and tables turn into cards on phones |
-
-### Roles
-
-| Role | Can do |
-|------|--------|
-| **Admin** | Everything: manage devices and users, and edit or delete any scan |
-| **Analyst** | Create scans, and edit or delete **their own** scans |
-| **Viewer** | Read only: browse, search and view scans and devices |
-
-New accounts start as **analyst**. An admin can change roles on the Users page.
-
-## Tech stack
-
-| Layer | Tech |
-|-------|------|
-| Frontend | React 18, Vite, React Router, Axios, plain CSS |
-| Backend | Node.js, Express 4, JWT (`jsonwebtoken`), `bcryptjs` |
-| Database | MySQL 8 (through `mysql2`) |
-| Tools | Git, npm, nodemon, ESLint |
-
----
-
-## Setup
-
-### Prerequisites
-
-- **Node.js** 18 or newer
-- **MySQL Server** 8 running locally (MySQL Workbench is optional but handy)
-
-### 1. Clone
+### 1. Clone the repository
 
 ```bash
-git clone https://github.com/sasiruyasith/spectraweb.git
-cd spectraweb
+git clone https://github.com/sasiruyasith/spectrawe.git
+cd spectrawe
 ```
 
-### 2. Backend
+### 2. Backend configuration
 
 ```bash
 cd backend
 npm install
-cp .env.example .env      # on Windows: copy .env.example .env
 ```
 
-Open `backend/.env` and set your MySQL password and a JWT secret:
+Copy `.env.example` to `.env` and fill in your MySQL details:
 
-```env
+```
+PORT=5000
+DB_HOST=localhost
+DB_PORT=3306
 DB_USER=root
 DB_PASSWORD=your_mysql_password
-JWT_SECRET=any_long_random_string
+DB_NAME=spectraweb
+JWT_SECRET=some_long_random_string
+CLIENT_URL=http://localhost:5173
 ```
 
-Create the database, tables and sample data:
+### 3. Create the database and sample data
 
 ```bash
 npm run setup
 ```
 
-> ⚠️ `npm run setup` **drops and recreates** the SpectraWeb tables. Use it again any time you want to reset the data.
+This creates the `spectraweb` database, the tables and some sample users, devices and scans. Running it again will reset everything back to the sample data.
 
-Start the API (runs on **http://localhost:5000**):
+### 4. Frontend configuration
 
-```bash
-npm run dev
-```
-
-Check it's working: http://localhost:5000/api/health should return `{"status":"ok","db":"connected"}`.
-
-### 3. Frontend
-
-In a **second terminal**:
+Open a new terminal:
 
 ```bash
 cd frontend
 npm install
+```
+
+## Running the Application
+
+Start the backend (from the `backend` folder):
+
+```bash
 npm run dev
 ```
 
-Open **http://localhost:5173**
+The API runs on http://localhost:5000. You can check that it is connected to the database at http://localhost:5000/api/health
 
-### Demo logins
+Start the frontend (from the `frontend` folder):
 
-All the demo accounts use the password **`password123`**.
+```bash
+npm run dev
+```
 
-| Role | Email |
-|------|-------|
-| Admin | `admin@spectraweb.lk` |
-| Analyst | `analyst@spectraweb.lk` |
-| Viewer | `viewer@spectraweb.lk` |
+Then open http://localhost:5173 in the browser.
 
----
+## Default Login Credentials
 
-## Database design
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | admin@spectraweb.lk | password123 |
+| Analyst | analyst@spectraweb.lk | password123 |
+| Viewer | viewer@spectraweb.lk | password123 |
 
-### ERD
+- **Admin** - can manage devices and users and edit or delete any scan
+- **Analyst** - can add scans and edit or delete only their own scans
+- **Viewer** - read only access
+
+New accounts created from the register page get the analyst role. The admin can change roles from the Users page.
+
+## Features
+
+- Login and registration with JWT authentication and bcrypt password hashing
+- Role based access (admin, analyst, viewer)
+- Dashboard showing total scans, devices, locations, strongest peak and scans per band
+- Add, view, edit and delete spectrum scans
+- Search scans by title, location or notes
+- Filter scans by band (HF, VHF, UHF, SHF) or by device
+- Sort by date, peak power, frequency or title
+- Spectrum plot on the scan details page with the peak marked
+- Device management (a device cannot be deleted while it still has scans)
+- User management for the admin
+- Validation on both the frontend and the backend with error messages
+- Confirmation popup before deleting anything
+- Responsive layout for mobile
+
+## Tech Stack
+
+- **Frontend:** React 18, Vite, React Router, Axios, CSS
+- **Backend:** Node.js, Express
+- **Database:** MySQL 8
+- **Authentication:** JSON Web Tokens, bcryptjs
+
+## Database Design
+
+The database has three tables: `users`, `devices` and `scans`.
 
 ```mermaid
 erDiagram
@@ -152,7 +127,7 @@ erDiagram
         VARCHAR name
         VARCHAR email UK
         VARCHAR password_hash
-        ENUM role "admin | analyst | viewer"
+        ENUM role
         DATETIME created_at
     }
     DEVICES {
@@ -168,7 +143,7 @@ erDiagram
         VARCHAR title
         INT device_id FK
         INT created_by FK
-        ENUM band "HF | VHF | UHF | SHF"
+        ENUM band
         DECIMAL start_freq_mhz
         DECIMAL stop_freq_mhz
         DECIMAL peak_freq_mhz
@@ -182,132 +157,122 @@ erDiagram
     }
 ```
 
-### Relationships and constraints
+- One device can have many scans. `scans.device_id` references `devices.id` with `ON DELETE RESTRICT`, so a device that is still in use cannot be deleted.
+- One user can log many scans. `scans.created_by` references `users.id` with `ON DELETE SET NULL`, so scans are kept even if the user is removed.
+- `email` and device `name` are unique.
+- CHECK constraints make sure the stop frequency is greater than the start frequency and that the peak frequency is inside the scan range.
+- DECIMAL is used for frequency and power values, and ENUM is used for band and role.
 
-- **devices 1 ─ * scans**: `scans.device_id → devices.id`, **ON DELETE RESTRICT** (a device that still has scans can't be removed).
-- **users 1 ─ * scans**: `scans.created_by → users.id`, **ON DELETE SET NULL** (when a user is deleted, their scans are kept).
-- `UNIQUE` on `users.email` and `devices.name`.
-- `CHECK` constraints:
-  - `stop_freq_mhz > start_freq_mhz`
-  - the peak frequency must lie inside the scan range
-  - `max_freq_mhz > min_freq_mhz` for devices
-- `ENUM` columns for `band` and `role`. `DECIMAL` is used for frequencies and power so the values aren't rounded the way floats are.
-- Indexes on `band` and `scanned_at` to speed up filtering and sorting.
-- `updated_at` is filled in automatically by MySQL (`ON UPDATE CURRENT_TIMESTAMP`).
+The full schema is in `backend/config/schema.sql`.
 
-The full schema is in [`backend/config/schema.sql`](backend/config/schema.sql).
+## API Endpoints
 
----
+| Method | Endpoint | Access |
+|--------|----------|--------|
+| POST | /api/auth/register | Public |
+| POST | /api/auth/login | Public |
+| GET | /api/auth/me | Logged in |
+| GET | /api/scans | Logged in |
+| GET | /api/scans/stats | Logged in |
+| GET | /api/scans/:id | Logged in |
+| POST | /api/scans | Admin, Analyst |
+| PUT | /api/scans/:id | Admin, Owner |
+| DELETE | /api/scans/:id | Admin, Owner |
+| GET | /api/devices | Logged in |
+| POST | /api/devices | Admin |
+| PUT | /api/devices/:id | Admin |
+| DELETE | /api/devices/:id | Admin |
+| GET | /api/users | Admin |
+| PUT | /api/users/:id/role | Admin |
+| DELETE | /api/users/:id | Admin |
 
-## API endpoints
+The scan list supports query parameters: `q` (search), `band`, `device` and `sort` (newest, oldest, power, freq, title).
 
-All endpoints except register and login need an `Authorization: Bearer <token>` header.
-
-| Method | Endpoint | Access | Description |
-|--------|----------|--------|-------------|
-| POST | `/api/auth/register` | public | create account |
-| POST | `/api/auth/login` | public | log in, returns a JWT |
-| GET | `/api/auth/me` | logged in | current user |
-| GET | `/api/scans?q=&band=&device=&sort=` | logged in | list, search, filter, sort |
-| GET | `/api/scans/stats` | logged in | dashboard numbers |
-| GET | `/api/scans/:id` | logged in | one scan |
-| POST | `/api/scans` | admin, analyst | create scan |
-| PUT | `/api/scans/:id` | admin, owner | update scan |
-| DELETE | `/api/scans/:id` | admin, owner | delete scan |
-| GET | `/api/devices` | logged in | list devices with scan counts |
-| POST / PUT / DELETE | `/api/devices[/:id]` | admin | manage devices |
-| GET | `/api/users` | admin | list users |
-| PUT | `/api/users/:id/role` | admin | change role |
-| DELETE | `/api/users/:id` | admin | delete user |
-
----
-
-## Project structure
+## Project Files
 
 ```
-spectraweb/
+spectrawe/
 ├── backend/
-│   ├── config/
-│   │   ├── db.js             # MySQL connection pool
-│   │   └── schema.sql        # tables, keys, constraints
-│   ├── controllers/          # auth, scans, devices, users
-│   ├── middleware/
-│   │   ├── auth.js           # JWT check + role check
-│   │   └── validate.js       # server side validation
-│   ├── routes/index.js       # all API routes
-│   ├── setup.js              # creates DB + sample data
-│   ├── server.js             # express app entry
-│   └── .env.example
+│   ├── config/          db connection and schema.sql
+│   ├── controllers/     auth, scans, devices, users
+│   ├── middleware/      auth and validation
+│   ├── routes/          api routes
+│   ├── setup.js         creates database and sample data
+│   └── server.js
 ├── frontend/
-│   ├── public/logo.svg
+│   ├── public/
 │   └── src/
-│       ├── api.js            # axios instance + token
-│       ├── context/          # AuthContext (login state)
-│       ├── components/       # Navbar, SpectrumChart, ConfirmModal...
-│       ├── pages/            # Dashboard, ScanList, ScanForm...
-│       ├── utils/validate.js # client side validation
-│       └── index.css
+│       ├── components/
+│       ├── context/
+│       ├── pages/
+│       └── utils/
 └── docs/screenshots/
 ```
 
----
-
 ## Screenshots
 
-### Dashboard
+**Dashboard**
+
 ![Dashboard](docs/screenshots/dashboard.png)
 
-### Scan list with search, filter and sort
-![Scan list](docs/screenshots/scans.png)
+**Scan list**
 
-<details>
-<summary>Filtered: UHF band, sorted by strongest peak</summary>
+![Scans](docs/screenshots/scans.png)
 
-![Filtered](docs/screenshots/scans-filter.png)
-</details>
+**Filtered by UHF band and sorted by peak power**
 
-### Scan details with spectrum plot
+![Filter](docs/screenshots/scans-filter.png)
+
+**Scan details**
+
 ![Details](docs/screenshots/details.png)
 
-### Create scan & validation errors
-| Create | Validation |
-|---|---|
-| ![Create](docs/screenshots/create.png) | ![Validation](docs/screenshots/validation.png) |
+**Add scan**
 
-### Edit scan
+![Create](docs/screenshots/create.png)
+
+**Validation errors**
+
+![Validation](docs/screenshots/validation.png)
+
+**Edit scan**
+
 ![Edit](docs/screenshots/edit.png)
 
-### Delete confirmation
+**Delete confirmation**
+
 ![Delete](docs/screenshots/delete-confirm.png)
 
-### Devices & users (admin)
-| Devices | Users |
-|---|---|
-| ![Devices](docs/screenshots/devices.png) | ![Users](docs/screenshots/users.png) |
+**Devices**
 
-### Login
+![Devices](docs/screenshots/devices.png)
+
+**Users**
+
+![Users](docs/screenshots/users.png)
+
+**Login**
+
 ![Login](docs/screenshots/login.png)
 
-### Mobile
-<p>
-  <img src="docs/screenshots/mobile.png" width="260" alt="Mobile scan list">
-  &nbsp;&nbsp;
-  <img src="docs/screenshots/mobile-dashboard.png" width="260" alt="Mobile dashboard">
-</p>
+**Mobile view**
 
----
+<img src="docs/screenshots/mobile.png" width="260"> <img src="docs/screenshots/mobile-dashboard.png" width="260">
 
 ## Troubleshooting
 
-| Problem | Fix |
-|---------|-----|
-| `setup failed: Access denied for user 'root'` | Wrong `DB_PASSWORD` in `backend/.env` |
-| `ECONNREFUSED 127.0.0.1:3306` | MySQL service isn't running. Start **MySQL80** in Windows Services |
-| Frontend says *"Could not reach the server"* | The backend isn't running. Start it with `npm run dev` in `backend/` |
-| Port 5000 already in use | Change `PORT` in `backend/.env` and create `frontend/.env` containing `VITE_API_URL=http://localhost:<port>/api` |
-| Logged out suddenly | The token expired (8 h). Log in again |
+**Access denied for user 'root'** - check `DB_PASSWORD` in `backend/.env`.
+
+**ECONNREFUSED 127.0.0.1:3306** - the MySQL service is not running. Start MySQL80 from Windows Services.
+
+**"Could not reach the server" on the frontend** - make sure the backend is running on port 5000.
+
+**Port 5000 already in use** - change `PORT` in `backend/.env` and add `VITE_API_URL=http://localhost:<port>/api` to a `frontend/.env` file.
+
+**Logged out suddenly** - the login token expires after 8 hours, just log in again.
 
 ## Notes
 
-- The spectrum trace is **simulated** from the stored peak frequency, peak power and noise floor. The app stores scan summaries, not raw sweep data.
-- AI assistance (Claude) was used during development, which the module allows.
+The spectrum plot is generated from the saved peak frequency, peak power and noise floor values. The app stores scan summaries, not raw sweep data.
+
+AI assistance (Claude) was used during development, which the module allows.
