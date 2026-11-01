@@ -18,7 +18,7 @@ export default function Navbar() {
     <header className="topbar">
       <Link to={user ? '/dashboard' : '/'} className="brand" onClick={close}>
         <img src="/logo.svg" alt="" width="30" height="30" />
-        Spectra<span>Web</span>
+        <span>Spectra<b>Web</b></span>
       </Link>
 
       <button className="menu-btn" onClick={() => setOpen(!open)} aria-label="Menu">☰</button>
