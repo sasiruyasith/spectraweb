@@ -1,0 +1,28 @@
+<%- include('../partials/header') %>
+<div class="page-head">
+  <h1>Devices</h1>
+  <a href="/devices/new" class="btn">+ New device</a>
+</div>
+
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Name</th><th>Model</th><th>Range (MHz)</th><th>Scans</th><th></th></tr></thead>
+  <tbody>
+  <% devices.forEach(d => { %>
+    <tr>
+      <td data-label="Name"><%= d.name %></td>
+      <td data-label="Model"><%= d.model %></td>
+      <td data-label="Range"><%= d.min_freq_mhz %> – <%= d.max_freq_mhz %></td>
+      <td data-label="Scans"><a href="/scans?device=<%= d.id %>"><%= d.scan_count %></a></td>
+      <td class="actions">
+        <a href="/devices/<%= d.id %>/edit" class="btn btn-sm">Edit</a>
+        <form method="post" action="/devices/<%= d.id %>/delete" data-confirm="Delete device '<%= d.name %>'?">
+          <button class="btn btn-sm btn-danger">Delete</button>
+        </form>
+      </td>
+    </tr>
+  <% }) %>
+  </tbody>
+</table>
+</div>
+<%- include('../partials/footer') %>

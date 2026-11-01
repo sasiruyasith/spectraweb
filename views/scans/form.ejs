@@ -1,0 +1,70 @@
+<%- include('../partials/header') %>
+<h1><%= title %></h1>
+<%- include('../partials/errors') %>
+
+<form class="card form" method="post" action="<%= action %>" id="scanForm" novalidate>
+  <label>Title
+    <input name="title" required minlength="3" maxlength="80" value="<%= scan.title || '' %>">
+  </label>
+
+  <div class="grid-2">
+    <label>Device
+      <select name="device_id" required>
+        <option value="">-- choose --</option>
+        <% devices.forEach(d => { %>
+          <option value="<%= d.id %>" <%= String(scan.device_id) === String(d.id) ? 'selected' : '' %>>
+            <%= d.name %> (<%= d.min_freq_mhz %>–<%= d.max_freq_mhz %> MHz)
+          </option>
+        <% }) %>
+      </select>
+    </label>
+    <label>Band
+      <select name="band" required>
+        <option value="">-- choose --</option>
+        <% bands.forEach(b => { %><option <%= scan.band === b ? 'selected' : '' %>><%= b %></option><% }) %>
+      </select>
+    </label>
+  </div>
+
+  <div class="grid-3">
+    <label>Start freq (MHz)
+      <input type="number" step="any" min="0" name="start_freq_mhz" required value="<%= scan.start_freq_mhz ?? '' %>">
+    </label>
+    <label>Stop freq (MHz)
+      <input type="number" step="any" min="0" name="stop_freq_mhz" required value="<%= scan.stop_freq_mhz ?? '' %>">
+    </label>
+    <label>Peak freq (MHz)
+      <input type="number" step="any" min="0" name="peak_freq_mhz" required value="<%= scan.peak_freq_mhz ?? '' %>">
+    </label>
+  </div>
+
+  <div class="grid-2">
+    <label>Peak power (dBm)
+      <input type="number" step="any" min="-150" max="30" name="peak_power_dbm" required value="<%= scan.peak_power_dbm ?? '' %>">
+    </label>
+    <label>Noise floor (dBm)
+      <input type="number" step="any" min="-180" max="0" name="noise_floor_dbm" required value="<%= scan.noise_floor_dbm ?? '' %>">
+    </label>
+  </div>
+
+  <div class="grid-2">
+    <label>Location
+      <input name="location" required maxlength="80" value="<%= scan.location || '' %>">
+    </label>
+    <label>Scanned at
+      <input type="datetime-local" name="scanned_at" required value="<%= scan.scanned_at || '' %>">
+    </label>
+  </div>
+
+  <label>Notes <small class="muted">(optional)</small>
+    <textarea name="notes" rows="3" maxlength="500"><%= scan.notes || '' %></textarea>
+  </label>
+
+  <div id="clientErrors" class="alert alert-error" hidden></div>
+
+  <div class="btn-row">
+    <button type="submit" class="btn">Save</button>
+    <a href="<%= scan.id ? '/scans/' + scan.id : '/scans' %>" class="btn btn-ghost">Cancel</a>
+  </div>
+</form>
+<%- include('../partials/footer') %>

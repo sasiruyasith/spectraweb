@@ -1,0 +1,23 @@
+{
+  "name": "spectraweb",
+  "version": "1.0.0",
+  "description": "SpectraWeb - RF spectrum scan manager (EE4207 mini project)",
+  "main": "app.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node --watch app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.22.3"
+  },
+  "engines": {
+    "node": ">=22.5"
+  }
+}

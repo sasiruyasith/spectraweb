@@ -1,0 +1,30 @@
+<%- include('../partials/header') %>
+<h1><%= title %></h1>
+<%- include('../partials/errors') %>
+
+<form class="card form" method="post" action="<%= action %>" id="deviceForm" novalidate>
+  <div class="grid-2">
+    <label>Name
+      <input name="name" required minlength="2" maxlength="50" value="<%= device.name || '' %>">
+    </label>
+    <label>Model
+      <input name="model" required maxlength="50" value="<%= device.model || '' %>">
+    </label>
+  </div>
+  <div class="grid-2">
+    <label>Min freq (MHz)
+      <input type="number" step="any" min="0" name="min_freq_mhz" required value="<%= device.min_freq_mhz ?? '' %>">
+    </label>
+    <label>Max freq (MHz)
+      <input type="number" step="any" min="0" name="max_freq_mhz" required value="<%= device.max_freq_mhz ?? '' %>">
+    </label>
+  </div>
+
+  <div id="clientErrors" class="alert alert-error" hidden></div>
+
+  <div class="btn-row">
+    <button type="submit" class="btn">Save</button>
+    <a href="/devices" class="btn btn-ghost">Cancel</a>
+  </div>
+</form>
+<%- include('../partials/footer') %>
